@@ -16,6 +16,11 @@
 ##### 3. Con R studio, voy a graficar regresión lineal, realizar un test F y calcular el R2 para saber que tan explicativo es este modelo.
 
 ## Limpieza y transformación del dataset PBI en u$d a precios constantes.
-#### -Descargo el dataset de PIB (u$s a precios constantes de 2015) del Banco Mundial que se encuentra en: https://datos.bancomundial.org/indicator/NY.GDP.MKTP.KD?locations=AR .
+#### -Descargo el dataset de PIB (u$s a precios constantes de 2015) del Banco Mundial en formato csv., que se encuentra en: https://datos.bancomundial.org/indicator/NY.GDP.MKTP.KD?locations=AR .
+#### Se nos presenta la siguiente planilla:
+![PBI_BancoMundial](https://github.com/user-attachments/assets/2c6f4d98-f805-44b0-ac1a-0f89d722f9f9)
+
 #### -Abro el archivo en Excel o Google Sheets y elimino las primeras 5 filas superiores dejando las fila 6 como cabecera de la tabla.
+#### -Pestaña "Datos" -> "Dividir texto en columnas". 
+#### -Lo convierto a tabla: Pestaña "Formato" -> "Convertir a tabla".
 #### -Guardo el archivo como "PBI usd precios constantes.csv"
