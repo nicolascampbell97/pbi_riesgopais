@@ -20,10 +20,10 @@
 #### Se nos presenta la siguiente planilla:
 ![PBI_BancoMundial](https://github.com/user-attachments/assets/2c6f4d98-f805-44b0-ac1a-0f89d722f9f9)
 
--Abro el archivo en Excel o Google Sheets y elimino las primeras 5 filas superiores dejando las fila 6 como cabecera de la tabla.
--Para que Google Sheets me lea el formato csv. y  me reeamplace las comas por columnas, hago lo siguiente: Pestaña "Datos" -> "Dividir texto en columnas". 
--Lo convierto a tabla: Pestaña "Formato" -> "Convertir a tabla".
--Guardo el archivo como "PBI usd precios constantes.csv", que es el que se encuentra en el repositorio.
+#### -Abro el archivo en Excel o Google Sheets y elimino las primeras 5 filas superiores dejando las fila 6 como cabecera de la tabla.
+#### -Para que Google Sheets me lea el formato csv. y  me reeamplace las comas por columnas, hago lo siguiente: Pestaña "Datos" -> "Dividir texto en columnas". 
+#### -Lo convierto a tabla: Pestaña "Formato" -> "Convertir a tabla".
+#### -Guardo el archivo como "PBI usd precios constantes.csv", que es el que se encuentra en el repositorio.
 
 #### Con SQL voy a seleccionar los campos con los años 1999 a 2023 y el campo con los nombres de los paises ("country_name"). Con la clausula WHERE voy a seleccionar el registro de Argentina del campo "country_name"
 ```sql
@@ -40,6 +40,9 @@ WHERE country_name = 'Argentina'
 ```
 =TRANSPONER('pib_ar_1999-2023.csv'!B1:Z2)
 ```
+#### Al observar los registros  de PBI me encontré con que muchos de ellos estaban escritos de manera diferente entre sí. Algunos tenían decimales, algunos se separaban por una coma (,) o por un punto (.). Lo que hice fue darle un mismo formato a todos los registros y determinar el formato de la columna "pbi_usd" como numérico.
+#### Para que no queden números tan grande, lo que hice fue crear otra columna llamada "pbi_en_mm", que contenga el resultado del número de la celda de la izquierda dividido 1.000.000
+
 
 
 
