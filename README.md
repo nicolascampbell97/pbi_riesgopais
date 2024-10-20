@@ -20,10 +20,26 @@
 #### Se nos presenta la siguiente planilla:
 ![PBI_BancoMundial](https://github.com/user-attachments/assets/2c6f4d98-f805-44b0-ac1a-0f89d722f9f9)
 
-#### -Abro el archivo en Excel o Google Sheets y elimino las primeras 5 filas superiores dejando las fila 6 como cabecera de la tabla.
-#### -Para que Google Sheets me lea el formato csv. y  me reeamplace las comas por columnas, hago lo siguiente: Pestaña "Datos" -> "Dividir texto en columnas". 
-#### -Lo convierto a tabla: Pestaña "Formato" -> "Convertir a tabla".
-#### -Guardo el archivo como "PBI usd precios constantes.csv", que es el que se encuentra en el repositorio.
+-Abro el archivo en Excel o Google Sheets y elimino las primeras 5 filas superiores dejando las fila 6 como cabecera de la tabla.
+-Para que Google Sheets me lea el formato csv. y  me reeamplace las comas por columnas, hago lo siguiente: Pestaña "Datos" -> "Dividir texto en columnas". 
+-Lo convierto a tabla: Pestaña "Formato" -> "Convertir a tabla".
+-Guardo el archivo como "PBI usd precios constantes.csv", que es el que se encuentra en el repositorio.
 
-### Con SQL 
+#### Con SQL voy a seleccionar los campos con los años 1999 a 2023 y el campo con los nombres de los paises ("country_name"). Con la clausula WHERE voy a seleccionar el registro de Argentina del campo "country_name"
+```sql
+
+SELECT country_name, "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"  
+FROM PBIusdpreciosconstantes
+WHERE country_name = 'Argentina'
+
+```
+#### Exporto el resultado como "pib_ar_1999-2023.csv"
+
+#### Para finalizar la transformación de este dataset voy a pivotearlo para que los años me queden como registros.
+-Abro "pib_ar_1999-2023.csv" en Google Sheets, abro otra hoja y uso la función TRANSPONER para poner a los años como registro de un solo campo llamado "año". 
+```
+=TRANSPONER('pib_ar_1999-2023.csv'!B1:Z2)
+```
+
+
 
