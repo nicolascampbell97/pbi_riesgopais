@@ -36,19 +36,19 @@ WHERE country_name = 'Argentina'
 #### Exporto el resultado como "pib_ar_1999-2023.csv"
 
 #### Para finalizar la transformación de este dataset voy a pivotearlo para que los años me queden como registros.
--Abro "pib_ar_1999-2023.csv" en Google Sheets, abro otra hoja y uso la función TRANSPONER para poner a los años como registro de un solo campo llamado "año". 
+##### -Abro "pib_ar_1999-2023.csv" en Google Sheets, abro otra hoja y uso la función TRANSPONER para poner a los años como registro de un solo campo llamado "año". 
 ```
 =TRANSPONER('pib_ar_1999-2023.csv'!B1:Z2)
 ```
-#### Al observar los registros  de PBI me encontré con que muchos de ellos estaban escritos de manera diferente entre sí. Algunos tenían decimales, algunos se separaban por una coma (,) o por un punto (.). Lo que hice fue darle un mismo formato a todos los registros y determinar el formato de la columna "pbi_usd" como numérico.
-#### Para que no queden números tan grandes, lo que hice fue crear otra columna llamada "pbi_en_mm", que contenga el resultado del número de la celda de la izquierda dividido por 1.000.000
+##### Al observar los registros  de PBI me encontré con que muchos de ellos estaban escritos de manera diferente entre sí. Algunos tenían decimales, algunos se separaban por una coma (,) o por un punto (.). Lo que hice fue darle un mismo formato a todos los registros y determinar el formato de la columna "pbi_usd" como numérico.
+##### Para que no queden números tan grandes, lo que hice fue crear otra columna llamada "pbi_en_mm", que contenga el resultado del número de la celda de la izquierda dividido por 1.000.000
 
 #### El resultado final es una tabla de 3 columnas: con los años, otra con el pbi argentino de esos años y una tercera con el pbi divido por 1.000.000, como se puede observar en el documento "pivot_pib_ar_1999-2023.csv" que se encuentra en el repositorio.
 
 ## 2. Limpieza y transformación del dataset de Riesgo País (EMBI).
-#### -Descargo el dataset de cotizaciones históricas de Riesgo País de Argentina desde esta página: https://www.rava.com/perfil/riesgo%20pais .
-#### -En SQL voy a seleccionar las columnas "cierre" (que contiene los puntos de cierre de Riesgo País de todas las fechas) y "fecha".
-#### -Posteriormente, para obtener los puntos de Riesgo País de cierre de cada fin de trimestre de los años 1999 a 2023, voy a filtrar las últimas fechas de cada trimestre usando la claúsula WHERE. Tendría que quedar una consulta con 100 registros (4 fechas de cierre por año). 
+##### -Descargo el dataset de cotizaciones históricas de Riesgo País de Argentina desde esta página: https://www.rava.com/perfil/riesgo%20pais .
+##### -En SQL voy a seleccionar las columnas "cierre" (que contiene los puntos de cierre de Riesgo País de todas las fechas) y "fecha".
+##### -Posteriormente, para obtener los puntos de Riesgo País de cierre de cada fin de trimestre de los años 1999 a 2023, voy a filtrar las últimas fechas de cada trimestre usando la claúsula WHERE. Tendría que quedar una consulta con 100 registros (4 fechas de cierre por año). 
 #### El código a ejecutar sería el siguiente:
 ```sql
 SELECT cierre, fecha from RIESGOPAISCotizacioneshistoricas
@@ -67,5 +67,23 @@ fecha = '2020-03-31' or fecha = '2020-06-30' or fecha = '2020-09-30' or fecha = 
 fecha = '2022-03-31' or fecha = '2022-06-30' or fecha = '2022-09-29' or fecha = '2022-12-31' OR fecha = '2023-03-31' or fecha = '2023-06-30' or fecha = '2023-09-30' or fecha = '2023-12-31'
 ```
 
+##### -Exporto la consulta en formato csv. y lo guardo como "EMBI_arg.csv", que está en el repositorio. 
+##### -En Google Sheets le doy formato a ambas de las columnas: A la columna fecha de doy formato fecha y a la columna cierre le doy formato numérico.
+##### -Para unir esta tabla con la de PBI, voy a crear una Foreign Key (o clave foránea) con el año de cada fecha de la columna "fecha", utilizando la función "AÑO". Ejemplo:
+```
+=AÑO(B2)
+```
+##### -El archivo final lo guardo como "EMBI_arg2.csv". 
 
+## 3. Fusión entre ambas tablas: 
+#### El último paso de transformación de datos para este proyecto, va a ser la de unir ambos datasets para hacer uno solo con laque voy a graficar la regresión lineal y hacer los tests. 
+##### -En SQL voy a unir ambas tablas por la columna "año" de cada una, usando INNER JOIN. Con SELECT, le pido que me muestre las columnas "año", "pbi_en_mm", "cierre" y "fecha"
+```
+SELECT rp.año, pbi_en__mm, cierre, fecha FROM pivot_pib_ar_19992023 pib
+inner join EMBI_arg2 rp
+on pib.año = rp.año
+```
+#### El resultado final lo exporto como “pib_riesgopais.csv”. 
+
+## 4. Gráfico de Modelo de Regresión Lineal, Test F y Coeficiente de Determinación R2 en R. 
 
