@@ -78,7 +78,7 @@ fecha = '2022-03-31' or fecha = '2022-06-30' or fecha = '2022-09-29' or fecha = 
 ## 3. Fusión entre ambas tablas: 
 #### El último paso de transformación de datos para este proyecto, va a ser la de unir ambos datasets para hacer uno solo con laque voy a graficar la regresión lineal y hacer los tests. 
 ##### -En SQL voy a unir ambas tablas por la columna "año" de cada una, usando INNER JOIN. Con SELECT, le pido que me muestre las columnas "año", "pbi_en_mm", "cierre" y "fecha"
-```
+```sql
 SELECT rp.año, pbi_en__mm, cierre, fecha FROM pivot_pib_ar_19992023 pib
 inner join EMBI_arg2 rp
 on pib.año = rp.año
@@ -86,4 +86,54 @@ on pib.año = rp.año
 #### El resultado final lo exporto como “pib_riesgopais.csv”. 
 
 ## 4. Gráfico de Modelo de Regresión Lineal, Test F y Coeficiente de Determinación R2 en R. 
+#### Con R studio voy a realizar, primero, el gráfico de regresión lineal entre las variables "cierre" (Riesgo País) y "pbi_en_mm" usando el paquete 'ggplot' de 'tidyverse'.
 
+```r
+library(tidyverse)
+library(dplyr)
+library(readr)
+library(ggplot2)
+
+pib_riesgopais <- read_csv("pib_riesgopais.csv")
+head(pib_riesgopais)                         
+
+####Grafico la regresión lineal con ggplot####
+plot_pib_riesgopais<-ggplot(pib_riesgopais,
+                            aes(x=cierre, y=pbi_en__mm))+
+  geom_point()+
+  geom_smooth(method = "lm", colour = "red")+
+  scale_y_continuous(limits = c(200000,700000),
+                     labels = function(n){format(n, scientific = FALSE)})+
+  theme (plot.title=element_text(family = "serif", face= "bold", size=25),
+         axis.title.y = element_text(family = "serif", size=15),
+         axis.title.x = element_text(family = "serif", size=15),
+         legend.position = "none")+
+  labs(x="Riesgo País",
+       y= "PIB en millones de USD",
+       title = "EMBI vs PIB USD a precios constantes de 2015 (1999-2023)",
+       caption = "Fuente: Elaboación propia en base a datos del Banco Mundial y EMBI de JP Morgan")
+plot(plot_pib_riesgopais)
+```
+##### -Abro el dataset "pib_riesgopais.csv" con read_csv.
+##### -Con ggplot hago la regresión con
+##### -En la línea 'scale_y_continuous' indico los limites numéricos del eje 'Y' y, en la parte 'labels = function...', le pido que me muestre los números del PBI como número entero, ya que me los indicaba en notación científica. 
+##### -En la línea 'theme' defino el tipo y el tamaño de letra. 
+##### -En la línea 'labs' escribo los títulos del gráfico, de los ejes y la fuente.
+
+![regresion_EMBIPIB](https://github.com/user-attachments/assets/8ff10528-e913-4086-9e59-e5e623ef8178)
+
+### Ahora calculo el R2 y realizo el test F para calcular el P-value y saber que tan bueno es este modelo de regresión lineal. 
+```r
+modelo_pib_rp <- lm(pbi_en__mm ~ cierre, data = pib_riesgopais)
+
+summary(modelo_pib_rp)
+```
+![P-value y R2](https://github.com/user-attachments/assets/a84dba67-67e0-4616-81e9-f9d019d14c14)
+
+#### LA fórmula de la regresión es: PBI = 558578,76 - 28,23*RiesgoPais
+#### Esto quiere decir que cuando el riesgo país aumenta en una unidad, el PBI cae u$d28,23 millones.
+
+## 5. Conclusiones
+#### Nuestro modelo de regresión lineal entre el Riesgo País y el PBI argentino es estadísticamente significativo ya que el P-value es 0.000, lo que es aceptable para un nivel de confianza del 95%.
+#### Sin embargo, el R2 obtenido es 0.3054, esto quiere decir que el Riesgo País explica la variabilidad del PBI argentino sólo en un 30,54%, lo cual debilita el nivel explicativo de este modelo. 
+#### Lo recomendable sería sumar otras variables que puedan explicar mejor la variabilidad del PBI.
