@@ -41,8 +41,31 @@ WHERE country_name = 'Argentina'
 =TRANSPONER('pib_ar_1999-2023.csv'!B1:Z2)
 ```
 #### Al observar los registros  de PBI me encontré con que muchos de ellos estaban escritos de manera diferente entre sí. Algunos tenían decimales, algunos se separaban por una coma (,) o por un punto (.). Lo que hice fue darle un mismo formato a todos los registros y determinar el formato de la columna "pbi_usd" como numérico.
-#### Para que no queden números tan grande, lo que hice fue crear otra columna llamada "pbi_en_mm", que contenga el resultado del número de la celda de la izquierda dividido 1.000.000
+#### Para que no queden números tan grandes, lo que hice fue crear otra columna llamada "pbi_en_mm", que contenga el resultado del número de la celda de la izquierda dividido por 1.000.000
 
+#### El resultado final es una tabla de 3 columnas: con los años, otra con el pbi argentino de esos años y una tercera con el pbi divido por 1.000.000, como se puede observar en el documento "pivot_pib_ar_1999-2023.csv" que se encuentra en el repositorio.
+
+## 2. Limpieza y transformación del dataset de Riesgo País (EMBI).
+#### -Descargo el dataset de cotizaciones históricas de Riesgo País de Argentina desde esta página: https://www.rava.com/perfil/riesgo%20pais .
+#### -En SQL voy a seleccionar las columnas "cierre" (que contiene los puntos de cierre de Riesgo País de todas las fechas) y "fecha".
+#### -Posteriormente, para obtener los puntos de Riesgo País de cierre de cada fin de trimestre de los años 1999 a 2023, voy a filtrar las últimas fechas de cada trimestre usando la claúsula WHERE. Tendría que quedar una consulta con 100 registros (4 fechas de cierre por año). 
+#### El código a ejecutar sería el siguiente:
+```sql
+SELECT cierre, fecha from RIESGOPAISCotizacioneshistoricas
+WHERE fecha = '1999-03-31' or fecha = '1999-06-30' or fecha = '1999-09-30' or fecha = '1999-12-31' OR
+fecha = '2000-03-31' or fecha = '2000-06-30' or fecha = '2000-09-29' or fecha = '2000-12-29' OR fecha = '2001-03-30' or fecha = '2001-06-29' or fecha = '2001-09-28' or fecha = '2001-12-31' OR
+fecha = '2002-03-29' or fecha = '2002-06-28' or fecha = '2002-09-30' or fecha = '2002-12-31' OR fecha = '2003-03-31' or fecha = '2003-06-30' or fecha = '2003-09-30' or fecha = '2003-12-31' OR
+fecha = '2004-03-31' or fecha = '2004-06-30' or fecha = '2004-09-30' or fecha = '2004-12-31' OR fecha = '2005-03-31' or fecha = '2005-06-30' or fecha = '2005-09-30' or fecha = '2005-12-31' OR
+fecha = '2006-03-31' or fecha = '2006-06-30' or fecha = '2006-09-29' or fecha = '2006-12-29' OR fecha = '2007-03-30' or fecha = '2007-06-29' or fecha = '2007-09-28' or fecha = '2007-12-31' OR
+fecha = '2008-03-31' or fecha = '2008-06-30' or fecha = '2008-09-30' or fecha = '2008-12-31' OR fecha = '2009-03-31' or fecha = '2009-06-30' or fecha = '2009-09-30' or fecha = '2009-12-31' OR
+fecha = '2010-03-31' or fecha = '2010-06-30' or fecha = '2010-09-30' or fecha = '2010-12-31' OR fecha = '2011-03-31' or fecha = '2011-06-30' or fecha = '2011-09-30' or fecha = '2011-12-30' OR
+fecha = '2012-03-30' or fecha = '2012-06-29' or fecha = '2012-09-28' or fecha = '2012-12-31' OR fecha = '2013-03-27' or fecha = '2013-06-28' or fecha = '2013-09-30' or fecha = '2013-12-31' OR
+fecha = '2014-03-31' or fecha = '2014-06-30' or fecha = '2014-09-30' or fecha = '2014-12-31' OR fecha = '2015-03-31' or fecha = '2015-06-30' or fecha = '2015-09-30' or fecha = '2015-12-31' OR
+fecha = '2016-03-31' or fecha = '2016-06-30' or fecha = '2016-09-30' or fecha = '2016-12-30' OR fecha = '2017-03-31' or fecha = '2017-06-30' or fecha = '2017-09-29' or fecha = '2017-12-29' OR
+fecha = '2018-03-29' or fecha = '2018-06-29' or fecha = '2018-09-28' or fecha = '2018-12-31' OR fecha = '2019-03-31' or fecha = '2019-06-30' or fecha = '2019-09-30' or fecha = '2019-12-31' OR
+fecha = '2020-03-31' or fecha = '2020-06-30' or fecha = '2020-09-30' or fecha = '2020-12-31' OR fecha = '2021-03-31' or fecha = '2021-06-30' or fecha = '2021-09-30' or fecha = '2021-12-31' OR
+fecha = '2022-03-31' or fecha = '2022-06-30' or fecha = '2022-09-29' or fecha = '2022-12-31' OR fecha = '2023-03-31' or fecha = '2023-06-30' or fecha = '2023-09-30' or fecha = '2023-12-31'
+```
 
 
 
