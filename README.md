@@ -7,7 +7,7 @@
 #### En pocas palabras, estos modelos nos muestran que existe una correlación inversa entre el nivel Riesgo País y el PBI, es decir, a mayor nivel de Riesgo Pais, menor sería el nivel del PBI, y viceversa. Lo que buscó sostener el Presidente es que, al tener superavit fiscal en las cuentas públicas y generar la mejores expectativas de cumplimiento de pago de deuda en el mercado, se reducirían los niveles de Riesgo País, y, en consecuencia, el PBI nacional aumentaría. 
 #### Sin embargo, estos modelos no cuentan con testeos estadísiticos que permitan saber que tan explicativos son.
 
-## Entonces, ¿Existe realmente una correlación significativa entre el Riesgo País y el PBI argetino? ¿En qué medida el Riesgo País explica el nivel del PIB? 
+### Entonces, ¿Existe realmente una correlación significativa entre el Riesgo País y el PBI argetino? ¿En qué medida el Riesgo País explica el nivel del PIB? 
 #### En este trabajo voy a responder estas preguntas. Para ello, llevé a cabo dos tareas: por un lado, un test F, para saber si el modelo es estadísticamente significativo calculando el P-value, y, por otro lado, calculando el Coeficiente de Determinación (R2) para saber en cuánto el Riesgo País explica al PBI.
 
 ### Pasos:
