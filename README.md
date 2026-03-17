@@ -1,4 +1,4 @@
-# ¿Existe una relación lineal entre el Riesgo País y el PBI?
+# ¿Existe una correlación entre el Riesgo País y el PBI?
 #### El 21 de Septiembre de 2024, el Presidente de la Nación, Javier Milei, posteo en la red social "X", dos modelos de regresión lineal. Uno entre el Riesgo País (EMBI) y el PBI en dólares, y otro entre el Riesgo País el Estimador Mensual de Actividad Económica.  
 ![Twit Milei](https://github.com/user-attachments/assets/3f630c2a-319f-4b1c-954d-eeaea80a335c)
 ![Milei relación EMBI vs PIB usd](https://github.com/user-attachments/assets/99ef124d-0bed-4a96-8d75-8ea7890d0640)
@@ -7,16 +7,16 @@
 #### En pocas palabras, estos modelos nos muestran que existe una correlación inversa entre el nivel Riesgo País y el PBI, es decir, a mayor nivel de Riesgo Pais, menor sería el nivel del PBI, y viceversa. Lo que buscó sostener el Presidente es que, al tener superavit fiscal en las cuentas públicas y generar la mejores expectativas de cumplimiento de pago de deuda en el mercado, se reducirían los niveles de Riesgo País, y, en consecuencia, el PBI nacional aumentaría. 
 #### Sin embargo, estos modelos no cuentan con testeos estadísiticos que permitan saber que tan explicativos son.
 
-## ¿Que voy a hacer en este trabajo?
-#### El objetivo de este trabajo es realizar, por un lado, un test F, para saber si el modelo es estadísticamente significativo, observando el P-value, y, por otro lado, calcular el Coeficiente de Determinación (R2) para saber en cuánto el Riesgo País explica al PBI.
+## Entonces, ¿Existe realmente una correlación significativa entre el Riesgo País y el PBI argetino? ¿En qué medida el Riesgo País explica el nivel del PIB? 
+#### En este trabajo voy a responder estas preguntas. Para ello, llevé a cabo dos tareas: por un lado, un test F, para saber si el modelo es estadísticamente significativo calculando el P-value, y, por otro lado, calculando el Coeficiente de Determinación (R2) para saber en cuánto el Riesgo País explica al PBI.
 
 ### Pasos:
 ##### 1. Obtener los datasets con la información del PBI en dólares a precios constantes de cada año y los puntos de Riesgo País de cada trimestre de los años 1999 a 2023.
 ##### 2. Limpiar y transformar dichos datasets para obtener un solo dataset con la información del PBI en dólares y el Riesgo País, utilizando Excel y SQL.
-##### 3. Con R studio, voy a graficar regresión lineal, realizar un test F y calcular el R2 para saber que tan explicativo es este modelo.
+##### 3. Con R, voy a graficar regresión lineal, realizar un test F y calcular el R2 para saber que tan explicativo es este modelo.
 
 ## 1. Limpieza y transformación del dataset PBI en u$d a precios constantes.
-##### -Descargué el dataset de PIB (u$s a precios constantes de 2015) del Banco Mundial en formato csv., que se encuentra en: https://datos.bancomundial.org/indicator/NY.GDP.MKTP.KD?locations=AR .
+##### Descargué el dataset de PIB (u$s a precios constantes de 2015) del Banco Mundial en formato csv., que se encuentra en: https://datos.bancomundial.org/indicator/NY.GDP.MKTP.KD?locations=AR .
 #### Se nos presenta la siguiente planilla:
 ![PBI_BancoMundial](https://github.com/user-attachments/assets/2c6f4d98-f805-44b0-ac1a-0f89d722f9f9)
 
@@ -134,4 +134,4 @@ summary(modelo_pib_rp)
 
 ## 5. Conclusiones
 #### Por un lado, podemos sostener que este modelo de regresión lineal entre el Riesgo País y el PBI argentino es estadísticamente significativo ya que el P-value es 0.000, lo que es aceptable para un nivel de confianza del 95%. Sin embargo, el R2 obtenido es 0.3054, esto quiere decir que el Riesgo País explica la variabilidad del PBI argentino sólo en un 30,54%, lo cual debilita el nivel explicativo de este modelo. 
-#### Con estos resultado podemos afirmar que el Riesgo País no alcanza por sí solo a explicar el PBI en argentina. Lo recomendable sería sumar otras variables que puedan explicar mejor la variabilidad del PBI, como los niveles de productividad de los distintos sectores de la economía, el balance comercial, los niveles de inflación, la política cambiaria y el acceso de empresas a divisas, entre otras variables. 
+#### Con estos resultado podemos afirmar que la correlación entre ambas variables es baja, es decir, el Riesgo País no alcanza por sí solo a explicar el PBI en argentina. Lo recomendable sería sumar otras variables que puedan explicar mejor la variabilidad del PBI, como los niveles de productividad de ciertos sectores de la economía, el balance comercial, los niveles de inflación, la política monetaria y fiscal, el acceso a divisas por parte de empresas para la compra de bienes de capital, entre otras variables. 
