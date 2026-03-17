@@ -15,6 +15,7 @@
 ##### 2. Limpiar y transformar dichos datasets para obtener un solo dataset con la información del PBI en dólares y el Riesgo País, utilizando Excel y SQL.
 ##### 3. Con R, voy a graficar regresión lineal, realizar un test F y calcular el R2 para saber que tan explicativo es este modelo.
 
+
 ## 1. Limpieza y transformación del dataset PBI en u$d a precios constantes.
 ##### Descargué el dataset de PIB (u$s a precios constantes de 2015) del Banco Mundial en formato csv., que se encuentra en: https://datos.bancomundial.org/indicator/NY.GDP.MKTP.KD?locations=AR .
 #### Se nos presenta la siguiente planilla:
