@@ -4,7 +4,7 @@
 ![Milei relación EMBI vs PIB usd](https://github.com/user-attachments/assets/99ef124d-0bed-4a96-8d75-8ea7890d0640)
 ![Milei relación EMBI vs EMAE](https://github.com/user-attachments/assets/3cd6682e-838f-4e34-9c6f-4ba3ab92e2cf)
 
-#### En pocas palabras, lo que estos modelos nos muestran es que existe una relación inversa entre el nivel Riesgo País y el PBI, es decir, a mayor nivel de Riesgo Pais, menor sería el nivel del PBI, y viceversa. Lo que buscó sostener el Presidente es que, al tener superavit fiscal y generar la mejores expectativas de pago de deuda en el mercado (reduciendo así el Riesgo País), el PBI del país iba a aumentar. 
+#### En pocas palabras, estos modelos nos muestran que existe una correlación inversa entre el nivel Riesgo País y el PBI, es decir, a mayor nivel de Riesgo Pais, menor sería el nivel del PBI, y viceversa. Lo que buscó sostener el Presidente es que, al tener superavit fiscal en las cuentas públicas y generar la mejores expectativas de cumplimiento de pago de deuda en el mercado, se reducirían los niveles de Riesgo País, y, en consecuencia, el PBI nacional aumentaría. 
 #### Sin embargo, estos modelos no cuentan con testeos estadísiticos que permitan saber que tan explicativos son.
 
 ## ¿Que voy a hacer en este trabajo?
@@ -16,16 +16,17 @@
 ##### 3. Con R studio, voy a graficar regresión lineal, realizar un test F y calcular el R2 para saber que tan explicativo es este modelo.
 
 ## 1. Limpieza y transformación del dataset PBI en u$d a precios constantes.
-##### -Descargo el dataset de PIB (u$s a precios constantes de 2015) del Banco Mundial en formato csv., que se encuentra en: https://datos.bancomundial.org/indicator/NY.GDP.MKTP.KD?locations=AR .
+##### -Descargué el dataset de PIB (u$s a precios constantes de 2015) del Banco Mundial en formato csv., que se encuentra en: https://datos.bancomundial.org/indicator/NY.GDP.MKTP.KD?locations=AR .
 #### Se nos presenta la siguiente planilla:
 ![PBI_BancoMundial](https://github.com/user-attachments/assets/2c6f4d98-f805-44b0-ac1a-0f89d722f9f9)
 
-##### -Abro el archivo en Excel o Google Sheets y elimino las primeras 5 filas superiores dejando las fila 6 como cabecera de la tabla.
-##### -Para que Google Sheets me lea el formato csv. y me reemplace las comas por columnas, hago lo siguiente: Pestaña "Datos" -> "Dividir texto en columnas". 
-##### -Lo convierto a tabla: Pestaña "Formato" -> "Convertir a tabla".
-##### -Guardo el archivo como "PBI usd precios constantes.csv", que es el que se encuentra en el repositorio.
+#### Primero empecé con una limpieza de datos en excel a través de distintas tareas:
+##### -eliminé filas vacías.
+##### -cambié el formato de .csv de comas para que las interprete como columnas.
+##### -y le dí formato de tabla.
+#### El resultado final es el documento "PBI usd precios constantes.csv", que se encuentra en el repositorio.
 
-#### Con SQL voy a seleccionar los campos con los años 1999 a 2023 y el campo con los nombres de los paises ("country_name"). Con la clausula WHERE voy a seleccionar el registro de Argentina del campo "country_name"
+#### La siguiente tarea consistió en filtrar los datos que necesitaba para el analisis. Utilizando consultas de SQL, filtré el PBI de Argentina entre los años 1999 a 2023.
 ```sql
 
 SELECT country_name, "1999", "2000", "2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021", "2022", "2023"  
@@ -33,23 +34,25 @@ FROM PBIusdpreciosconstantes
 WHERE country_name = 'Argentina'
 
 ```
-#### Exporto el resultado como "pib_ar_1999-2023.csv"
+#### Este documento lo exporté como "pib_ar_1999-2023.csv"
 
-#### Para finalizar la transformación de este dataset voy a pivotearlo para que los años me queden como registros.
-##### -Abro "pib_ar_1999-2023.csv" en Google Sheets, abro otra hoja y uso la función TRANSPONER para poner a los años como registro de un solo campo llamado "año". 
+#### Para finalizar la transformación de este dataset decidí pivotearlo en Excel, de manera tal que los años queden como registros junto con su PBI respectivo.
+##### Con la función TRANSPONER transfomé los años en registros de un campo llamado "año". 
 ```
 =TRANSPONER('pib_ar_1999-2023.csv'!B1:Z2)
 ```
-##### Al observar los registros  de PBI me encontré con que muchos de ellos estaban escritos de manera diferente entre sí. Algunos tenían decimales, algunos se separaban por una coma (,) o por un punto (.). Lo que hice fue darle un mismo formato a todos los registros y determinar el formato de la columna "pbi_usd" como numérico.
-##### Para que no queden números tan grandes, lo que hice fue crear otra columna llamada "pbi_en_mm", que contenga el resultado del número de la celda de la izquierda dividido por 1.000.000
+##### Al observar los registros de PBI me encontré con que muchos de estos estaban escritos de manera diferente entre sí. Algunos tenían decimales y otros no; habian números en el que los "miles" y "millones" se separaban con una coma (,) o por un punto (.). 
+##### Para resolver esto, lo que hice fue darle un mismo formato a todos los registros y determinar el formato de la columna "pbi_usd" como numérico.
+##### Por otra parte, para que no queden números tan extensos, lo que hice fue crear otra columna llamada "pbi_en_mm", que contenga el resultado del número de la celda de la izquierda dividido por 1.000.000.
 
-#### El resultado final es una tabla de 3 columnas: con los años, otra con el pbi argentino de esos años y una tercera con el pbi divido por 1.000.000, como se puede observar en el documento "pivot_pib_ar_1999-2023.csv" que se encuentra en el repositorio.
+#### El resultado final es una tabla de 3 columnas: años; pbi argentino; y pbi divido por 1.000.000.
+#### Se puede encontrar como "pivot_pib_ar_1999-2023.csv" en el repositorio.
 
 ## 2. Limpieza y transformación del dataset de Riesgo País (EMBI).
-##### -Descargo el dataset de cotizaciones históricas de Riesgo País de Argentina desde esta página: https://www.rava.com/perfil/riesgo%20pais .
-##### -En SQL voy a seleccionar las columnas "cierre" (que contiene los puntos de cierre de Riesgo País de todas las fechas) y "fecha".
-##### -Posteriormente, para obtener los puntos de Riesgo País de cierre de cada fin de trimestre de los años 1999 a 2023, voy a filtrar las últimas fechas de cada trimestre usando la claúsula WHERE. Tendría que quedar una consulta con 100 registros (4 fechas de cierre por año). 
-#### El código a ejecutar sería el siguiente:
+##### Descargué el dataset de cotizaciones históricas de Riesgo País de Argentina desde: https://www.rava.com/perfil/riesgo%20pais .
+##### En SQL seleccioné las columnas "cierre" (que contiene los puntos de cierre de Riesgo País de todas las fechas) y "fecha".
+##### Para obtener los puntos de Riesgo País de cierre de cada fin de trimestre de los años 1999 a 2023, voy a filtrar las últimas fechas de cada trimestre usando la claúsula WHERE. 
+#### El código ejecutado fue el siguiente:
 ```sql
 SELECT cierre, fecha from RIESGOPAISCotizacioneshistoricas
 WHERE fecha = '1999-03-31' or fecha = '1999-06-30' or fecha = '1999-09-30' or fecha = '1999-12-31' OR
@@ -66,27 +69,28 @@ fecha = '2018-03-29' or fecha = '2018-06-29' or fecha = '2018-09-28' or fecha = 
 fecha = '2020-03-31' or fecha = '2020-06-30' or fecha = '2020-09-30' or fecha = '2020-12-31' OR fecha = '2021-03-31' or fecha = '2021-06-30' or fecha = '2021-09-30' or fecha = '2021-12-31' OR
 fecha = '2022-03-31' or fecha = '2022-06-30' or fecha = '2022-09-29' or fecha = '2022-12-31' OR fecha = '2023-03-31' or fecha = '2023-06-30' or fecha = '2023-09-30' or fecha = '2023-12-31'
 ```
+##### Quedó así una consulta con 100 registros de puntos de Riesgo País, que se encuentra con el nombre "EMBI_arg.csv" en el repositorio. 
 
-##### -Exporto la consulta en formato csv. y lo guardo como "EMBI_arg.csv", que está en el repositorio. 
-##### -En Google Sheets le doy formato a ambas de las columnas: A la columna fecha de doy formato fecha y a la columna cierre le doy formato numérico.
-##### -Para unir esta tabla con la de PBI, voy a crear una Foreign Key (o clave foránea) con el año de cada fecha de la columna "fecha", utilizando la función "AÑO". Ejemplo:
+##### En Excel le doy formato a las columnas: A la columna "fecha" de doy formato fecha, mientras que a la columna "cierre" le doy formato numérico.
+
+##### Para poder unir esta tabla con la de PBI, voy a crear una Foreign Key con el año de cada fecha de la columna "fecha", utilizando la función "AÑO" de Excel. Ejemplo:
 ```
 =AÑO(B2)
 ```
-##### -El archivo final lo guardo como "EMBI_arg2.csv". 
+##### El archivo de Riesgo País que queda es una tabla con 3 columnas: la columna "cierre", con los puntos de Riesgo País; la columna "fecha", con la fecha correspondiente a la última fecha registrada de cada trimestre; Y una columna "año" con el año de las fechas de la columna anterior. Dicha tabla se encuentra como "EMBI_arg2.csv" en el repositorio. 
 
 ## 3. Fusión entre ambas tablas: 
-#### El último paso de transformación de datos para este proyecto, va a ser la de unir ambos datasets para hacer uno solo con laque voy a graficar la regresión lineal y hacer los tests. 
-##### -En SQL voy a unir ambas tablas por la columna "año" de cada una, usando INNER JOIN. Con SELECT, le pido que me muestre las columnas "año", "pbi_en_mm", "cierre" y "fecha"
+#### El último paso de transformación de datos para este proyecto fue unir ambos datasets para hacer una sola tabla que voy a utilizar para graficar la regresión lineal y hacer los tests. 
+##### En SQL uní ambas tablas a través de la columna "año" de cada una, usando la función INNER JOIN.
 ```sql
 SELECT rp.año, pbi_en__mm, cierre, fecha FROM pivot_pib_ar_19992023 pib
 inner join EMBI_arg2 rp
 on pib.año = rp.año
 ```
-#### El resultado final lo exporto como “pib_riesgopais.csv”. 
+#### El resultado final lo exporté como “pib_riesgopais.csv”. 
 
-## 4. Gráfico de Modelo de Regresión Lineal, Test F y Coeficiente de Determinación R2 en R. 
-#### Con R studio voy a realizar, primero, el gráfico de regresión lineal entre las variables "cierre" (Riesgo País) y "pbi_en_mm" usando el paquete 'ggplot' de 'tidyverse'.
+## 4. Modelo de Regresión Lineal, Test F y Coeficiente de Determinación R2 en R. 
+#### Con R elaboré el gráfico de regresión lineal entre las variables "cierre" (Riesgo País) y "pbi_en_mm" usando el paquete 'ggplot'.
 
 ```r
 library(tidyverse)
@@ -114,15 +118,10 @@ plot_pib_riesgopais<-ggplot(pib_riesgopais,
        caption = "Fuente: Elaboación propia en base a datos del Banco Mundial y EMBI de JP Morgan")
 plot(plot_pib_riesgopais)
 ```
-##### -Abro el dataset "pib_riesgopais.csv" con read_csv.
-##### -Con ggplot hago la regresión con
-##### -En la línea 'scale_y_continuous' indico los limites numéricos del eje 'Y' y, en la parte 'labels = function...', le pido que me muestre los números del PBI como número entero, ya que me los indicaba en notación científica. 
-##### -En la línea 'theme' defino el tipo y el tamaño de letra. 
-##### -En la línea 'labs' escribo los títulos del gráfico, de los ejes y la fuente.
 
 ![regresion_EMBIPIB](https://github.com/user-attachments/assets/8ff10528-e913-4086-9e59-e5e623ef8178)
 
-### Ahora calculo el R2 y realizo el test F para calcular el P-value y saber que tan bueno es este modelo de regresión lineal. 
+### Calculé el R2 y realicé un test F para calcular el P-value y saber que tan bueno es este modelo de regresión lineal. 
 ```r
 modelo_pib_rp <- lm(pbi_en__mm ~ cierre, data = pib_riesgopais)
 
@@ -134,6 +133,5 @@ summary(modelo_pib_rp)
 #### Esto quiere decir que cuando el riesgo país aumenta en una unidad, el PBI cae u$d28,23 millones.
 
 ## 5. Conclusiones
-#### Nuestro modelo de regresión lineal entre el Riesgo País y el PBI argentino es estadísticamente significativo ya que el P-value es 0.000, lo que es aceptable para un nivel de confianza del 95%.
-#### Sin embargo, el R2 obtenido es 0.3054, esto quiere decir que el Riesgo País explica la variabilidad del PBI argentino sólo en un 30,54%, lo cual debilita el nivel explicativo de este modelo. 
-#### Lo recomendable sería sumar otras variables que puedan explicar mejor la variabilidad del PBI.
+#### Por un lado, podemos sostener que este modelo de regresión lineal entre el Riesgo País y el PBI argentino es estadísticamente significativo ya que el P-value es 0.000, lo que es aceptable para un nivel de confianza del 95%. Sin embargo, el R2 obtenido es 0.3054, esto quiere decir que el Riesgo País explica la variabilidad del PBI argentino sólo en un 30,54%, lo cual debilita el nivel explicativo de este modelo. 
+#### Con estos resultado podemos afirmar que el Riesgo País no alcanza por sí solo a explicar el PBI en argentina. Lo recomendable sería sumar otras variables que puedan explicar mejor la variabilidad del PBI, como los niveles de productividad de los distintos sectores de la economía, el balance comercial, los niveles de inflación, la política cambiaria y el acceso de empresas a divisas, entre otras variables. 
